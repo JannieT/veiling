@@ -7,9 +7,8 @@ class DB
         'host' => 'localhost',
         'dbname' => 'veiling',
         'username' => 'root',
-        'password' => '[ ----- ]',
+        'password' => '[ ******** ]',
     );
-    
     private $db;
 
     public function __construct()
@@ -35,6 +34,36 @@ class DB
 
         return array();
 //        throw new InvalidArgumentException('no user with that id');        
+    }
+
+    private function note_payment($betaal)
+    {
+        $qMarks = str_repeat('?,', count($betaal) - 1) . '?';
+        $sql = "UPDATE items "
+                . "SET betaal = 1 "
+                . "WHERE nommer IN ($qMarks)";
+
+        try
+        {
+            $this->db->beginTransaction();
+            $this->db->prepare($sql)
+                    ->execute($betaal);
+            $this->db->commit();
+        }
+        catch (Exception $ex)
+        {
+            $this->db->rollBack();
+//    echo $exc->getTraceAsString();
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function NoteAsPaid($betaal)
+    {
+        $model = new DB();
+        return $model->note_payment($betaal);
     }
 
     public static function GetItemsFor($bieer_id)
@@ -66,7 +95,6 @@ class Item
     }
 
 }
-
 
 /*
 
