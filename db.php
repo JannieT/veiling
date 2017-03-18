@@ -17,41 +17,6 @@ class Model
         $this->db->query("SET NAMES 'utf8'");
     }
 
-    public function getLotte()
-    {
-        $sql = "SELECT nommer, bieer_id, bedrag, beskrywing "
-                . "FROM items "
-                . "ORDER BY nommer";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([]);
-        if ($rows = $stmt->fetchAll(PDO::FETCH_NUM))
-        {
-            return $rows;
-            // return array_map(function($row) {
-            //     return [$row[0], $row[1]];
-            // }, $rows);
-        }
-
-        return [];
-    }
-
-    public function getRegistration()
-    {
-        $sql = "SELECT nommer, naam, telefoon, epos "
-                . "FROM bieers "
-                . "ORDER BY nommer ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([]);
-        if ($rows = $stmt->fetchAll(PDO::FETCH_NUM))
-        {
-            return $rows;
-            // return array_map(function($row) {
-            //     return [$row[0], $row[1]];
-            // }, $rows);
-        }
-
-        return [];
-    }
 
     public function getBieer($bieer_id)
     {
@@ -79,54 +44,6 @@ class Model
 
         return array();
 //        throw new InvalidArgumentException('no user with that id');        
-    }
-
-    public function updateLotte($rows)
-    {
-        $sql = "UPDATE items SET bieer_id =?, bedrag=? "
-               ."WHERE nommer=?";
-
-        try
-        {
-            $this->db->beginTransaction();
-            $stmnt = $this->db->prepare($sql);
-            foreach ($rows as $row) {
-                $stmnt ->execute([$row[1], $row[2], $row[0]]);
-            }
-            $this->db->commit();
-        }
-        catch (Exception $ex)
-        {
-            $this->db->rollBack();
-            return false;
-        }
-
-        return $this->getLotte();
-        
-    }
-
-    public function updateBieers($rows)
-    {
-        $sql = "UPDATE bieers SET naam =?, telefoon=?, epos=? "
-               ."WHERE nommer=?";
-
-        try
-        {
-            $this->db->beginTransaction();
-            $stmnt = $this->db->prepare($sql);
-            foreach ($rows as $row) {
-                $stmnt ->execute([$row[1], $row[2], $row[3], $row[0]]);
-            }
-            $this->db->commit();
-        }
-        catch (Exception $ex)
-        {
-            $this->db->rollBack();
-            return false;
-        }
-
-        return $this->getRegistration();
-        
     }
     
     private function set_unpaid($betaal)

@@ -30,17 +30,13 @@ class Api
         $this->getItemsForBier();
         $this->getBieer();
 
-        $this->getRegistration();
-        $this->getLotte();
 
         // privileged routes
         // ----------------------------
         $this->authenticate();
 
-        $this->handlePost();
+        $this->handleBetaal();
         $this->handleFileUpload();
-        $this->handleRegistration();
-        $this->handleLotte();
 
         $this->dieWithBadRequest();
     }
@@ -80,7 +76,7 @@ class Api
         }
     }
 
-    public function handlePost()
+    public function handleBetaal()
     {
         if ((isset($_POST[Api::KeyBetaal]) == false))
         {
@@ -99,39 +95,6 @@ class Api
         }
 
         $this->dieWithServerError();
-    }
-
-    public function handleLotte()
-    {
-        if (!isset($_POST['lot1']))
-            return;
-
-        $model = $this->getModel();
-
-        $rows = array_values($_POST);
-        if ($response = $model->updateLotte($rows))
-        {
-            $this->respond($response);
-        } else {
-            $this->dieWithServerError();    
-        }
-    }
-    
-
-    public function handleRegistration()
-    {
-        if (!isset($_POST['ry1']))
-            return;
-
-        $model = $this->getModel();
-
-        $rows = array_values($_POST);
-        if ($response = $model->pdateBieers($rows))
-        {
-            $this->respond($response);
-        } else {
-            $this->dieWithServerError();    
-        }
     }
     
     public function handlePing()
@@ -173,27 +136,6 @@ class Api
             $this->dieWithNotFound();
         }
     }
-
-    public function getRegistration()
-    {
-        if (!isset($_GET[self::KeyRegistrasie]))
-            return;
-
-        $model = $this->getModel();
-
-        $this->respond($model->getRegistration());
-    }
-
-    public function getLotte()
-    {
-        if (!isset($_GET[self::KeyLotte]))
-            return;
-
-        $model = $this->getModel();
-
-        $this->respond($model->getLotte());
-    }
-
 
     private function respond($result)
     {
