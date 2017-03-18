@@ -1,1 +1,8 @@
-nbproject
+## General
+.DS_Store
+
+## project specific
+public/uploads/*.jpg
+config.php
+
+
