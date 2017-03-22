@@ -50,11 +50,11 @@ class Api
     private function authenticate()
     {
         if (!isset($_SERVER['HTTP_AUTHORIZATION'])) 
-            $this->dieWithForbidden();
+            $this->dieWithUnauthorised();
 
         $key = substr($_SERVER['HTTP_AUTHORIZATION'], 7);
         if ($key != $this->config['api_key']) 
-            $this->dieWithForbidden();
+            $this->dieWithUnauthorised();
        
     }
 
@@ -141,6 +141,12 @@ class Api
     {
         header('Content-Type: application/json; charset=utf-8');
         die(json_encode($result));
+    }
+
+    private function dieWithUnauthorised()
+    {
+        header($_SERVER["SERVER_PROTOCOL"] . " 401 Unauthorized", true, 401);
+        die();
     }
 
     private function dieWithForbidden()
