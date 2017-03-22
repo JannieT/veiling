@@ -26,7 +26,6 @@ class Api
     {
         // public routes
         
-        $this->handlePing();
         $this->getItemsForBier();
         $this->getBieer();
 
@@ -35,6 +34,7 @@ class Api
         // ----------------------------
         $this->authenticate();
 
+        $this->handlePing();
         $this->handleBetaal();
         $this->handleFileUpload();
 

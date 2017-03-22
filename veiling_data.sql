@@ -137,7 +137,7 @@ CREATE TABLE `items` (
   `beskrywing` varchar(255) DEFAULT NULL,
   `bieer_id` int(11) DEFAULT NULL,
   `bedrag` decimal(10,2) DEFAULT NULL,
-  `betaal` tinyint(4) DEFAULT NULL,
+  `betaal` tinyint(1) DEFAULT NULL,
   `soort` varchar(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_bieers` (`bieer_id`),
