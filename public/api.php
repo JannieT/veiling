@@ -9,7 +9,7 @@ class Api
     const KeyBetaalSoort = 'betaal_soort';
     const KeyBieerNaam = 'bieer_naam';
     const KeyBieerId = 'bieer_id';
-    const KeyPhoto = "foto";
+    const KeyPhoto = "foto"; // TODO: deprecate
 
     const KeyRegistrasie = "registrasie";
     const KeyLotte = "lotte";
@@ -17,7 +17,7 @@ class Api
 
     /* other constants */
     const Model = "../db.php";
-    const UploadFolder = "../uploads/";
+    const UploadFolder = "./uploads/";
     const Config = "../config.php";
 
     private $config;
@@ -33,7 +33,7 @@ class Api
         // privileged routes
         // ----------------------------
         $this->authenticate();
-
+        // var_dump($_FILES); die();
         $this->handlePing();
         $this->handleBetaal();
         $this->handleFileUpload();
@@ -64,13 +64,30 @@ class Api
         return new Model($this->config);
     }
 
+/*
+array(1) {
+  ["file"]=>
+  array(5) {
+    ["name"]=>
+    string(5) "5.jpg"
+    ["type"]=>
+    string(24) "application/octet-stream"
+    ["tmp_name"]=>
+    string(26) "/private/var/tmp/phpJ7r6Jf"
+    ["error"]=>
+    int(0)
+    ["size"]=>
+    int(1153949)
+  }
+}
+ */
     public function handleFileUpload()
     {
-        if (!isset($_FILES[Api::KeyPhoto]['error']) || ($_FILES[Api::KeyPhoto]['error'] != UPLOAD_ERR_OK))
+        if (!isset($_FILES['file']['error']) || ($_FILES['file']['error'] != UPLOAD_ERR_OK))
             return;
 
-        $uploadfile = Api::UploadFolder . basename($_FILES[Api::KeyPhoto]['name']);
-        if (move_uploaded_file($_FILES[Api::KeyPhoto]['tmp_name'], $uploadfile))
+        $uploadfile = Api::UploadFolder . basename($_FILES['file']['name']);
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile))
         {
             $this->respond("OK");
         }
@@ -85,7 +102,6 @@ class Api
 
         $betaal = json_decode($_POST[Api::KeyBetaal]);
         $soort = $_POST[Api::KeyBetaalSoort];
-        // var_dump($betaal); die();
 
 //        $betaal = array(1, 7, 16);
         $model = $this->getModel();
