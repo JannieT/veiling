@@ -1,5 +1,6 @@
-veiling
-=======
+# veiling
+
+**This project is now just sample and is not intended for production use. It is not actively maintained.**
 
 Om die ding op te stel:
 
